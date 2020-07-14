@@ -1,3 +1,6 @@
+//Name: Brian Moore
+//Class: CSE330 Summer 2020
+//Assignment: Project 1
 #ifndef TCB_H
 #define TCB_H
 #include<string.h>
