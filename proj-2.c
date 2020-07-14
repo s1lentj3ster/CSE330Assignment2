@@ -16,7 +16,10 @@ int main(){
     int i = 0;
     
     
-    if(scanf("%d", ))
+    if(scanf("%d", &test) !=1){
+        num[i] = &test;
+        i++;
+    }
 
     
 
@@ -24,7 +27,7 @@ int main(){
         
     
     
-    int tempbuff[B];
+   
         
    // printf("%d\n", B);
    // printf("%d\n", Pr);

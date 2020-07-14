@@ -4,11 +4,11 @@
 #include <string.h>
 #include "threads.h"
 
-struct q runQ;
+
 
 struct Semaphore{
     int value;
-    struct q *head;
+    struct q *semQ; //For every semaphore, you declare you have to create a new queue semQ;
 };
 
 void InitSem(Semaphore *semaphore, int value);
@@ -18,24 +18,26 @@ void V(Semaphore *semaphore);
 
 void InitSem(Semaphore *semaphore, int value){
 
-    semaphore->head = NULL;
+
     semaphore->value = value;
 }
 
 void P(Semaphore *semaphore){
 
-    struct TCB_t *blockSemaphore;
-    semaphore->value = semaphore->value - 1;
+    ucontext_t current;
+    semaphore->value--;
+    
     if(semaphore->value <= 0)
     {
-        
-        ucontext_t current;
-        blockSemaphore = delQueue(runQ);
-        newItem((semaphore->head),blockSemaphore);
-        swapcontext(current,&(runQ->head->context));
+        struct TCB_t *deleteReadyQ;
+        deleteReadyQ = delQueue(runQ);  //Deleting thread from runQ
+        AddQueue((semaphore->semQ),deleteReadyQ); //Adding TCB from runQ to semQ
+        getcontext(&current);              
+        swapcontext(&current,&(runQ->head->context)); //perform swap of current context with the head of RunQ and start
+        //yield();
 
     }
-    //yield();
+    #endif
 
 
 }
@@ -44,15 +46,15 @@ void V(Semaphore *semaphore){
 
     
 
-    semaphore->value = semaphore->value + 1;
+    semaphore->value++;
 
     if(semaphore->value <= 0)
     {
-        struct TCB_t *fromSemaphore;
-        fromSemaphore = delQueue(semaphore->head);
-        addQueue(&runQ, fromSemaphore);
-
+        struct TCB_t *deleteSemQ;
+        deleteSemQ = delQueue(semaphore->semQ);//Deleting head of semQ
+        AddQueue(runQ, deleteSemQ); //Adding to runQ
+        yield();
     }
 
-    yield();
+    
 }

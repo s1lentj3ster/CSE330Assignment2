@@ -19,6 +19,7 @@ struct q{
 //struct TCB_t* delQueue(struct TCB_t);
 //void rotateQueue(struct TCB_t*);
 
+struct q* runQ;
 
 int global_thread = 1;
 
