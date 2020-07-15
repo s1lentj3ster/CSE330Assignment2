@@ -6,24 +6,24 @@
 
 
 
-typedef struct Semaphore{
+typedef struct SemaphoreQ{
     int value;
-    struct q *semQ; //For every semaphore, you declare you have to create a new queue semQ;
-}Semaphore;
+    struct q semQ; //For every semaphore, you declare you have to create a new queue semQ;
+}SemaphoreQ;
 
-void InitSem(Semaphore *semaphore, int value);
-void P(Semaphore *semaphore);
-void V(Semaphore *semaphore);
+void InitSem(SemaphoreQ *semaphore, int value);
+void P(SemaphoreQ *semaphore);
+void V(SemaphoreQ *semaphore);
 
+struct SemaphoreQ semQ;
 
-void InitSem(Semaphore *semaphore, int value){
+void InitSem(SemaphoreQ *semaphore, int value){
 
-    semaphore->value = value;
-    
+    semaphore->value = value;    
     
 }
 
-void P(Semaphore *semaphore){
+void P(SemaphoreQ *semaphore){
 
     ucontext_t current;
     semaphore->value--;
@@ -32,7 +32,7 @@ void P(Semaphore *semaphore){
     {
         //struct TCB_t *deleteRunQ;
        // deleteRunQ = delQueue(&runQ);  //Deleting thread from runQ
-        AddQueue((semaphore->semQ),delQueue(&runQ)); //Adding TCB from runQ to semQ
+        AddQueue(&semaphore,delQueue(&runQ)); //Adding TCB from runQ to semQ
         getcontext(&current);  //grabbing current context and storing            
         swapcontext(&current,&(runQ.head->context)); //perform swap of current context with the head of RunQ and start
 
@@ -42,7 +42,7 @@ void P(Semaphore *semaphore){
 
 }
 
-void V(Semaphore *semaphore){
+void V(SemaphoreQ *semaphore){
 
     semaphore->value++;
 

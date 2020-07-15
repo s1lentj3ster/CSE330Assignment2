@@ -7,8 +7,8 @@
 void Prod(int);
 void Cons(int);
 
-struct Semaphore *Full;//Consumer
-struct Semaphore *Empty; //Producer
+struct SemaphoreQ *Full;//Consumer
+struct SemaphoreQ *Empty; //Producer
 
 
 int B,Pr,C,N;  //Buffer, Producers, Consumers, Loops
@@ -21,8 +21,8 @@ int main(){
     struct q runQ;
     InitQueue(&runQ);
     
-    Full = malloc(sizeof(Semaphore));
-    Empty = malloc(sizeof(Semaphore));
+    Full = malloc(sizeof(SemaphoreQ));
+    Empty = malloc(sizeof(SemaphoreQ));
     
     InitSem(Full, 0);
     InitSem(Empty, B);
