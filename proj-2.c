@@ -1,23 +1,38 @@
 #include <stdio.h>
 #include <string.h>
 #include "threads.h"
+#include "sem.h"
 
 
-void Prod(void);
-void Cons(void);
-//struct semaphore Full; //Consumer
-//struct semaphore Empty; //Producer
+void Prod(int);
+void Cons(int);
+
+struct Semaphore *Full;//Consumer
+struct Semaphore *Empty; //Producer
 
 
-int B,Pr,C,N;
+int B,Pr,C,N;  //Buffer, Producers, Consumers, Loops
 int global;
+int prod_id = 0; //in
+int cons_id = 0; //out
+int buffer = 0;
 int main(){
+
+    struct q runQ;
+    InitQueue(&runQ);
+    
+    Full = malloc(sizeof(Semaphore));
+    Empty = malloc(sizeof(Semaphore));
+    
+    InitSem(Full, 0);
+    InitSem(Empty, B);
 
     //scanf("%d,%d,%d,%d",&B,&Pr,&C,&N);
     int num[100];
     int test;
     int i = 0;
     int k = 0;
+    thread_ID = 0;
     
     scanf("%d,%d,%d,%d", &B,&Pr,&C,&N);
     while(scanf("%d", &test) != EOF){
@@ -25,64 +40,77 @@ int main(){
         num[i] = test;
         i++;
     }
-
-    while(k < i){
-        if(num[k] < 0 ){
-            Cons();
-            global = num[k];
-            start_thread(Cons);
-        }
-        else
-        {
-            Prod();
-            global = num[k];
-            start_thread(Prod);
-        }
-        k++;
-        
-    }
-
-
-
-
-    //printf("\n%d\n", i);
-    /*printf("\n%d", B);
-    printf("\n%d", Pr);
-    printf("\n%d", C);
-    printf("\n%d", N);*/
-    /*while(scanf("%[^\n]%*d", &test)){
-        num[i] = test;
-        i++;
-    }
     
+    global = N;
 
+    //
     while(k <= i){
-        printf("\n%d", num[k]);
-        k++;
-    }*/
-printf("\n");
-return 0;
+        if(num[k] < 0 ){
+           // Cons();
+           if(cons_id < C){
+            cons_id++;
+            thread_ID = cons_id;
+            start_thread(Cons);
+           }
+            k++;
+            
+        }
+        else 
+        {
+            //Prod();
+           if(prod_id < Pr){
+            
+            prod_id++; 
+            thread_ID = prod_id;           
+            start_thread(Prod);
+            
+           }
+          k++;
+           
+        }
         
-    
-    
-   
         
-   // printf("%d\n", B);
-   // printf("%d\n", Pr);
-    //printf("%d\n", C);
-    //printf("%d\n", N);
-    
-    
-
-
-    
+    }
+    run();   
 }
 
 
-void Prod(void){
-    printf("\nthis is the %d producer", global);
+void Prod(int thread_ID){
+    int x = 1;
+    
+        while(x<= global){
+    
+        P(Empty);
+      
+        runQ.number = runQ.number + 1;
+      
+        //printf("\n%d is this real?", global);
+     
+        printf("\nthis is the %d producer\n", thread_ID);
+      
+        //printf("\n%d", runQ.number);
+        //printf("\n%d stopped. \n", runQ.number);
+        V(Full);
+        x++; 
+        
+         }
+    
+    
+    
+     
+   //yield();
 }
 
-void Cons(void){
-    printf("\nThis is the %d consumer", global);
+
+void Cons(int thread_ID){
+    int y = 1;
+    while(y<=global){
+        P(Full);
+        printf("\nThis is the %d consumer\n", thread_ID);
+        
+        P(Empty);
+        
+    }
+    
+    //yield();
 }

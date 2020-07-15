@@ -13,6 +13,7 @@ struct TCB_t	*prev;
 ucontext_t	context;
 } TCB_t;	
 int thread_ID;
+int global;
 
 
 

@@ -19,14 +19,14 @@ struct q{
 //struct TCB_t* delQueue(struct TCB_t);
 //void rotateQueue(struct TCB_t*);
 
-struct q* runQ;
+//struct q* runQ;
 
 int global_thread = 1;
 
 void InitQueue(struct q *tcb){
 	//Initial Queue object, set to NULL
     tcb->head = NULL;
-    //tcb->number = 1;
+    
     return;
 }
 
