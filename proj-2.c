@@ -3,14 +3,14 @@
 #include "threads.h"
 
 
-void Prod();
-void Cons();
-struct semaphore Full; //Consumer
-struct semaphore Empty; //Producer
+void Prod(void);
+void Cons(void);
+//struct semaphore Full; //Consumer
+//struct semaphore Empty; //Producer
 
 
 int B,Pr,C,N;
-
+int global;
 int main(){
 
     //scanf("%d,%d,%d,%d",&B,&Pr,&C,&N);
@@ -21,14 +21,31 @@ int main(){
     
     scanf("%d,%d,%d,%d", &B,&Pr,&C,&N);
     while(scanf("%d", &test) != EOF){
-        printf("\n%d", test);
+        //printf("\n%d", test);
         num[i] = test;
         i++;
     }
 
+    while(k < i){
+        if(num[k] < 0 ){
+            Cons();
+            global = num[k];
+            start_thread(Cons);
+        }
+        else
+        {
+            Prod();
+            global = num[k];
+            start_thread(Prod);
+        }
+        k++;
+        
+    }
 
 
-    printf("\n%d\n", i);
+
+
+    //printf("\n%d\n", i);
     /*printf("\n%d", B);
     printf("\n%d", Pr);
     printf("\n%d", C);
@@ -43,7 +60,7 @@ int main(){
         printf("\n%d", num[k]);
         k++;
     }*/
-
+printf("\n");
 return 0;
         
     
@@ -62,10 +79,10 @@ return 0;
 }
 
 
-void Prod(){
-
+void Prod(void){
+    printf("\nthis is the %d producer", global);
 }
 
-void Cons(){
-
+void Cons(void){
+    printf("\nThis is the %d consumer", global);
 }

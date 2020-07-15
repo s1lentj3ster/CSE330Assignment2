@@ -34,17 +34,14 @@ void P(Semaphore *semaphore){
         AddQueue((semaphore->semQ),deleteReadyQ); //Adding TCB from runQ to semQ
         getcontext(&current);              
         swapcontext(&current,&(runQ->head->context)); //perform swap of current context with the head of RunQ and start
-        //yield();
 
     }
-    #endif
+
 
 
 }
 
 void V(Semaphore *semaphore){
-
-    
 
     semaphore->value++;
 
@@ -58,3 +55,4 @@ void V(Semaphore *semaphore){
 
     
 }
+#endif
