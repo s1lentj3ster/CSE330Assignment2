@@ -82,8 +82,7 @@ void Prod(int thread_ID){
     
         P(Empty);
       
-        runQ.number = runQ.number + 1;
-      
+            
         //printf("\n%d is this real?", global);
      
         printf("\nthis is the %d producer\n", thread_ID);
