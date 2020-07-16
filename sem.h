@@ -6,40 +6,31 @@
 
 
 
-typedef struct SemaphoreQ{
+/*struct Semaphore{
     int value;
-<<<<<<< HEAD
-    struct q semQ; //For every semaphore, you declare you have to create a new queue semQ;
-}SemaphoreQ;
-=======
-    struct TCB_t *head; //For every semaphore, you declare you have to create a new queue semQ;
-}Semaphore;
->>>>>>> 858213112babaa83f15bcbf417838f4dae983aed
+    struct q *semQ; //For every semaphore, you declare you have to create a new queue semQ;
+};*/
+//struct Semaphore semQ;
 
-void InitSem(SemaphoreQ *semaphore, int value);
-void P(SemaphoreQ *semaphore);
-void V(SemaphoreQ *semaphore);
+typedef struct q semQ;
 
-struct SemaphoreQ semQ;
+//void InitSem(semQ *semaphore, int value);
+//void P(semQ *semaphore);
+//void V(semQ *semaphore);
 
-void InitSem(SemaphoreQ *semaphore, int value){
+struct q runQ;
 
-    semaphore->value = value;    
-    
+void InitSem(semQ *semaphore, int value){
+
+    semaphore->value = value;
+    //InitQueue(semaphore->semQ);    
 }
 
-void P(SemaphoreQ *semaphore){
-
-    
-    
-    
+void P(semQ *semaphore){
+    //struct q *semQ;
+    // = semaphore;
     if(semaphore->value > 0)
     {
-<<<<<<< HEAD
-        //struct TCB_t *deleteRunQ;
-       // deleteRunQ = delQueue(&runQ);  //Deleting thread from runQ
-        AddQueue(&semaphore,delQueue(&runQ)); //Adding TCB from runQ to semQ
-=======
         semaphore->value--;
         return;
     }
@@ -47,11 +38,10 @@ void P(SemaphoreQ *semaphore){
     {
         struct TCB_t *deleteRunQ;
         deleteRunQ = delQueue(&runQ);  //Deleting thread from runQ
-        AddQueue((semaphore->head),deleteRunQ); //Adding TCB from runQ to semQ
+        AddQueue(semaphore, deleteRunQ); //Adding TCB from runQ to semQ
         
->>>>>>> 858213112babaa83f15bcbf417838f4dae983aed
-        getcontext(&current);  //grabbing current context and storing            
-        swapcontext(&current,&(runQ.head->context)); //perform swap of current context with the head of RunQ and start
+          //grabbing current context and storing            
+        swapcontext(&(runQ.head->prev->context),&(runQ.head->context)); //perform swap of current context with the head of RunQ and start
     }
     
 
@@ -59,18 +49,23 @@ void P(SemaphoreQ *semaphore){
 
 }
 
-void V(SemaphoreQ *semaphore){
-
-    semaphore->value++;
-
-    if(semaphore->value <= 0)
-    {
-        //struct TCB_t *deleteSemQ; //Declare Temporary TCB_t item
-        //deleteSemQ = delQueue(semaphore->semQ);//Deleting head of semQ, getting item in return
-        AddQueue(&runQ, delQueue(semaphore->head)); //Adding to runQ
-        yield(); //Important
+void V(semQ *semaphore){
+    //struct q semQ;
+    if(semaphore->value > 0){
+        semaphore->value++;
+        return;
     }
+    
 
+   else if(semaphore->value <= 0)
+    {
+
+        //struct TCB_t *deleteSemQ; //Declare Temporary TCB_t item
+        //deleteSemQ = delQueue(semaphore);//Deleting head of semQ, getting item in return
+        AddQueue(&runQ, delQueue(semaphore)); //Adding to runQ
+       // yield(); //Important
+    }
+    yield();
     
 }
 #endif

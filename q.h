@@ -10,7 +10,7 @@
 
 struct q{
     struct TCB_t *head; //First Element
-    int number; //payload
+    int value; //payload
 };
 
 //struct TCB_t* newItem();
