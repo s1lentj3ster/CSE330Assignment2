@@ -12,13 +12,13 @@
 };*/
 //struct Semaphore semQ;
 
-typedef struct Semaphore{
+struct Semaphore{
 
     struct q *semQ;
     int value;
 
 
-}semQ;
+};
 
 //void InitSem(semQ *semaphore, int value);
 //void P(semQ *semaphore);
@@ -26,54 +26,52 @@ typedef struct Semaphore{
 
 struct q runQ;
 
-void InitSem(semQ *semaphore, int value){
-
+void InitSem(struct Semaphore *semaphore, int value){
+    semaphore->semQ = (struct q*)malloc(sizeof(struct q));
+    InitQueue(semaphore->semQ);
     semaphore->value = value;
-    semaphore->semQ->head = NULL;   
+    //semaphore->semQ->head = NULL;   
+    return;
 }
 
-void P(semQ *semaphore){
-    //struct q *semQ;
-    // = semaphore;
+void P(struct Semaphore *semaphore){
+    //struct TCB_t addQueue; 
     if(semaphore->value > 0)
     {
         semaphore->value--;
-        return;
+        //return;
     }
     else if(semaphore->value <= 0)
     {
-        ucontext_t current;
-        
+
+        //ucontext_t current;
         //struct TCB_t *deleteRunQ;
-        //deleteRunQ = ;  //Deleting thread from runQ
-        AddQueue(semaphore->semQ, delQueue(&runQ)); //Adding TCB from runQ to semQ(Rotate)
-        getcontext(&current);
+        //deleteRunQ = ;  //Deleting thread from runQ      
+        AddQueue(semaphore->semQ, delQueue(&runQ)); //Adding TCB from runQ to semQ(Rotate)//blocking
+        //getcontext(&current);
         //grabbing current context and storing            
-        swapcontext(&current,&(runQ.head->context)); //perform swap of current context with the head of RunQ and start
+        swapcontext(&(semaphore->semQ->head->context),&(runQ.head->context)); //perform swap of current context with the head of RunQ and start
     }
-    
+    return;
 
 
 
 }
 
-void V(semQ *semaphore){
-    //struct q semQ;
+void V(struct Semaphore *semaphore){
+    struct TCB_t *deleteSemQ; //Declare Temporary TCB_t item
     if(semaphore->value > 0){
         semaphore->value++;
-        return;
+       // return;
     }
-    
-
-   else if(semaphore->value <= 0)
+    else if(semaphore->value <= 0)
     {
-
-        struct TCB_t *deleteSemQ; //Declare Temporary TCB_t item
-        deleteSemQ = delQueue(semaphore);//Deleting head of semQ, getting item in return
-        AddQueue(&runQ, deleteSemQ); //Adding to runQ
+        
+        //deleteSemQ = ;//Deleting head of semQ, getting item in return
+        AddQueue(&runQ, delQueue((semaphore->semQ))); //Adding to runQ
          //Important
     }
     yield();
-    
+    return;
 }
 #endif

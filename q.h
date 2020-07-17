@@ -32,12 +32,9 @@ void InitQueue(struct q *tcb){
 
 struct TCB_t* newItem(){
     struct TCB_t *item = (struct TCB_t*) malloc(sizeof(struct TCB_t)); //allocate new queue. 
-
-
     //New Item, initialized to NULL for both next and prev
     item->next = NULL;
-    item->prev = NULL;
-     
+    item->prev = NULL;     
     return item; //Returns the new item 
 
 }

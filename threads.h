@@ -20,8 +20,7 @@ void start_thread(void (*function)(int))
     // begin pseudo code
     //allocate a stack (via malloc) of a certain size (choose 8192)
     void *newStack = (void *)malloc(8192);
-    TCB_t *newTCB_t = newItem(); //allocate a TCB (via malloc)
-    
+    TCB_t *newTCB_t = newItem(); //allocate a TCB (via malloc)    
     init_TCB(newTCB_t,function,newStack,8192); //call init_TCB with appropriate arguments 
     AddQueue(&runQ,newTCB_t);//call addQ to add this TCB into the “RunQ” which is a global header pointer
     
