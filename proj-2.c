@@ -9,8 +9,9 @@ void Cons(int);
 
 
 //Declaration of Semaphore Queues//
-struct Semaphore Full; //Consumer
-struct Semaphore Empty;//Producer
+struct Semaphore *Full; //Consumer
+struct Semaphore *Empty;//Producer
+
 
 //Global Variables//
 int B,Pr,C,N;  //Buffer, Producers, Consumers, Loops
@@ -23,6 +24,7 @@ int buffer[32]; //maybe this will work
 
 int ConsInt;
 int ProdInt;
+int flag[2] = {0,0};
 
 //Main//
 int main(){
@@ -31,7 +33,7 @@ int main(){
     int num[100];
     int test;
     int i = 0;
-    int k = 0;
+    //int k = 0;
     thread_ID = 0;
     struct q runQ;
     //Full = (Se*) malloc(sizeof(semQ));
@@ -45,40 +47,50 @@ int main(){
     while(scanf("%d", &test) != EOF){
         num[i] = test;
         i++;
-        printf("\n%d\n",i);
+        //printf("\n%d\n",i);
     }
     printf("%d\n", num[0]);
-    printf("%d\n",num[1]);
+    printf("%d\n", num[1]);
     printf("%d\n", num[2]);
     printf("%d\n", num[3]);
     global = (int)(N);
     buffLoop = (int)(B);
     //printf(B);
-    buffer[B];
+    
     ConsInt = (int)(C);
     ProdInt = (int)(Pr);
     //------------------------------//
     //     Creating Buffer Array    //
     //------------------------------//
-    int buffer[B];
+   // int buffer[B];
+    buffer[32] = buffer[B];
     for(int r = 0; r< B; r++){
         buffer[r] = 0;
     //instantiate buffer
     }
     
      
-    
+    //runQ = (struct q*)malloc(sizeof(struct q));
+    Full = (struct Semaphore*)malloc(sizeof(struct Semaphore));
+    Empty = (struct Semaphore*)malloc(sizeof(struct Semaphore));
     InitQueue(&runQ);
-    InitSem(&Full, 0);
-    InitSem(&Empty, (int)(B));
+    InitSem(Full, 0);
+    InitSem(Empty, (int)(B));
+
+    printf("%d", Empty->value);
     
     //printf("%d", i);
     
+    start_thread(Prod);
+    start_thread(Prod);
+    //start_thread(Prod);
     
+   // start_thread(Cons);
     //start_thread(block);
     //Everything working up to this point....
     //start_thread(yield);
-    while(k < i){
+   /* while(k <= i){
+        
         if(num[k] < 0 ){
            // Cons();
            if(cons_id < (int)(C)){
@@ -87,9 +99,11 @@ int main(){
             //while(&Full.value == 0);;
             start_thread(Cons);
            }
-            k++;
+             k++;
+           }
+           
             
-        }
+        
         else 
         {
             //Prod();
@@ -98,45 +112,77 @@ int main(){
             thread_ID = prod_id;
             //while(&Empty.value == 0);;
             start_thread(Prod);            
-           }
-          k++;
+            }
+            k++;
+        }
+         
            
-        }
         
         
-    }
-    run();   
+        
+    }*/
+
+       
+    run();
+
+
 }
-
-
 void Prod(int thread_ID){
-        int x = 1;    
-        while(x <= ProdInt){ 
-            //P(&Empty);
-            bufferInt++;
-            printf("\nthis is the %d producer\n", thread_ID);
-            //V(&Full);
-            x++;           
-            //printf("\n%d is this real?", global);               
-            //printf("\n%d", runQ.number);
-            //printf("\n%d stopped. \n", runQ.number);
-             
-        }
+        int x = 0; 
+       // flag[0]=1; 
+        //while((bufferInt != 1));; 
+        //while(x < ProdInt){ 
+          // while(flag[1]==1){
+            //flag[0] = 0;
+            //sleep(1);
+            //flag[0] = 1;
+          // }
+
+           //Critical Section//
+
+           // P(Empty);            
+            buffer[bufferInt] = thread_ID;
+            bufferInt = (bufferInt + 1) % B;
+            
+            //printf("Buffer location %d", bufferInt);
+           // printf("\nthis is the %d producer\n", thread_ID);
+           // V(Full);
+            x++;  
+            //End Critical Section//
+            //flag[0] = 0;         
+                        
+        //}
+        yield();
         
-     return;    
+     //return;    
    
 }
 
 
 void Cons(int thread_ID){
-    int y = 1;
-    while(y <= ConsInt){        
-        //P(&Full);       
-        bufferInt--;
+    int y = 0;
+    //while((bufferInt != 0));;
+    //flag[1] = 1;
+    //while(y < ConsInt){ 
+      //  while(flag[0] == 1){
+        //    flag[1]=0;
+            //sleep(1);
+          //  flag[1] = 1;
+       // }    
+
+        //Critical Section//
+
+        //P(Full);
+        buffer[bufferInt] = 0;       
+        bufferInt = (bufferInt + 1) % B;
         printf("\nThis is the Consumer %d\n", thread_ID);     
-        //V(&Empty); 
-        y++;      
-    }
+        //V(Empty); 
+        y++;   
+
+        //End Critical Section//
+        flag[1] = 0;  
+        yield(); 
+    //}
     return;
 }
 
