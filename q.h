@@ -16,16 +16,15 @@ struct q{
 void InitQueue(struct q *tcb){
 
     tcb->head = NULL;
-    tcb->number = 1;
+   // tcb->number = 1;
     return;
 }
 
 struct TCB_t* newItem(){
     struct TCB_t *item = (struct TCB_t*) malloc(sizeof(struct TCB_t));
- 
     item->next = NULL;
     item->prev = NULL;
-     
+         
     return item;
 
 }
@@ -36,9 +35,7 @@ void AddQueue(struct q *tcb, struct TCB_t *item){
         {
            tcb->head = item; 
            item->next = NULL;
-           item->prev = NULL;
-           
-           
+           item->prev = NULL;          
         }
 
     else
@@ -48,20 +45,26 @@ void AddQueue(struct q *tcb, struct TCB_t *item){
                 tcb->head->next = item;
                 tcb->head->prev = item;
                 item->next = tcb->head;
-                item->prev = tcb->head;
-                
+                item->prev = tcb->head;             
             }
             else
             {
-                item->next = tcb->head;
+                //item->next = tcb->head;
                 item->prev = tcb->head->prev;
                 tcb->head->prev->next = item;
-                tcb->head->prev = item;
-                
+                tcb->head->prev = item;               
             }
     }
     
 }
+
+// if (tcb->head != NULL //|| tcb->head->next == NULL)
+        //if(tcb->head->next != NULL){
+            //item->prev = tcb->head->prev;
+            //tcb->head->prev->next = item;
+            //tcb->head->prev = item;
+        //}
+        
 
 struct TCB_t* delQueue(struct q *tcb){
     struct TCB_t *item = tcb->head;
@@ -86,6 +89,17 @@ struct TCB_t* delQueue(struct q *tcb){
 
 }
 
+
+// if(tcb->head == NULL || tcb->head->next == NULL){
+        //tcb->head->prev->next = tcb->head->next;
+        //tcb->head->next->prev = tcb->head->prev;
+        //tcb->head == tcb->head->next;
+
+        //if(tcb->head->next == NULL)
+            //tcb->head == NULL
+
+        //return item;
+//}
 void rotateQueue(struct q *tcb){
 
     AddQueue(tcb, delQueue(tcb));
