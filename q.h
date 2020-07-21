@@ -49,7 +49,7 @@ void AddQueue(struct q *tcb, struct TCB_t *item){
             }
             else
             {
-                //item->next = tcb->head;
+                item->next = tcb->head;
                 item->prev = tcb->head->prev;
                 tcb->head->prev->next = item;
                 tcb->head->prev = item;               

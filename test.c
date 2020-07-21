@@ -28,17 +28,18 @@ int main()
     //start_thread(runfunction);
     //thread_ID = 2;
     //start_thread(runfunction);
+    //buffer[32] = buffer[1];
     thread_ID = 1;
     int type[4]={1,-1,2,3};
     prod_thread = 1;
     cons_thread = 1;
     //buffer[32] = buffer[2];
-   // for(int d = 0; d < 2; d++){
-     //   buffer[d] = 0;
+   //for(int d = 0; d < 1; d++){
+       // buffer[d] = 0;
    // }
     
-
-    while(x <= 4){
+    bufferInt = 1; 
+    while(x < 4){
         if(type[x]>0){
             thread_ID = prod_thread;
             start_thread(Prod);
@@ -66,41 +67,42 @@ int main()
 
 
 void Prod(int thread_ID){
-    printf("\nProd %d going into queue\n", thread_ID);
+    //printf("\nProd %d going into queue\n", thread_ID);
     int prod = 0; //local
-    
-    while(prod < 3){
+    printf("\nProducer\n");
+    while(prod < 2){
         
         P(Empty);
-        flag[0] = 0;
-        printf("\nprod %d loop %d\n", thread_ID, prod +1 );
-        prod++;   
-       // printf("\nTesting Prod because this isn't working otherwise. Thread: %d\n", thread_ID);    
+        //flag[0] = 0;
+        //printf("\nprod %d loop %d\n", thread_ID, prod +1 );
+        prod++;
+        bufferInt--;        
+        printf("\nProducer %d is producing item number %d\n", thread_ID, prod);
         V(Full);
         yield();
+           
+        
+       // printf("\nTesting Prod because this isn't working otherwise. Thread: %d\n", thread_ID);    
+        
     };
-   // yield();
+  // yield();
 
 }
 
 void Cons(int thread_ID){
-    printf("\nConsumer %d is going into the queue\n", thread_ID);
+    printf("\nConsumer\n");
+    //printf("\nConsumer %d is going into the queue\n", thread_ID);
     int cons = 0;
-    while(cons < 3){
-    P(Full);
-    printf("\ncons %d loop %d\n", thread_ID, cons + 1);
+    while(cons < 2){
+    P(Full); 
+    printf("\nConsumer %d is consuming item %d\n", thread_ID, cons);   
     cons++;
-    //bufferInt--;
-    //if(flag != 1){
-        //printf("\nConsumer %d is waiting\n", thread_ID);
-        //yield();
-   // }
-   // printf("\nTesting Consumer because this isn't working. Thread: %d\n", thread_ID);
-    V(Empty);
-    printf("\nConsumer %d left the queue\n", thread_ID);
-    //flag = 0;
+    bufferInt++;    
+    V(Empty);  
     yield();
-    }
     
-    //yield();
+    
+    }
+   // yield();
+    
 }
