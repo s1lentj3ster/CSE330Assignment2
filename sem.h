@@ -8,11 +8,6 @@
 
 
 
-/*struct Semaphore{
-    int value;
-    struct q *semQ; //For every semaphore, you declare you have to create a new queue semQ;
-};*/
-//struct Semaphore semQ;
 
 struct Semaphore{
 
@@ -21,12 +16,6 @@ struct Semaphore{
 
 
 };
-
-//void InitSem(semQ *semaphore, int value);
-//void P(semQ *semaphore);
-//void V(semQ *semaphore);
-
-//struct q runQ;
 
 void InitSem(struct Semaphore *semaphore, int value){
     semaphore->semQ = (struct q* )malloc(sizeof(struct q));
@@ -52,15 +41,12 @@ void P(struct Semaphore *semaphore){
   
   }
 
-void V(struct Semaphore *semaphore){
-    
+void V(struct Semaphore *semaphore){    
   
-    semaphore->value++; 
-        
+    semaphore->value++;        
 
     if(semaphore->value <= 0)
-    {
-      
+    {      
        if(semaphore->semQ == NULL){
            
            exit(-1);
@@ -70,7 +56,6 @@ void V(struct Semaphore *semaphore){
         AddQueue(runQ, deleteEmptyTCB); //Adding to runQ
             
     }
-    //yield();
     
 }
 #endif
